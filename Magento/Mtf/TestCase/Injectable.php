@@ -129,7 +129,7 @@ abstract class Injectable extends Functional
         try {
             \PHP_Timer::start();
             if (!isset(static::$sharedArguments[$this->dataId]) && method_exists($this, '__prepare')) {
-                static::$sharedArguments[$this->dataId] = (array) $this->getObjectManager()->invoke($this, '__prepare');
+                static::$sharedArguments[$this->dataId] = (array)$this->getObjectManager()->invoke($this, '__prepare');
             }
             /** @var $testVariationIterator \Magento\Mtf\Util\Iterator\TestCaseVariation */
             $testVariationIterator = $this->getObjectManager()->create(
@@ -153,7 +153,8 @@ abstract class Injectable extends Functional
                 $this->currentVariation = $testVariationIterator->current();
                 $variation = $this->prepareVariation(
                     $this->currentVariation,
-                    $this->localArguments
+                    $this->localArguments,
+                    $result
                 );
                 $this->executeTestVariation($result, $variation);
                 $testVariationIterator->next();
@@ -254,33 +255,39 @@ abstract class Injectable extends Functional
      *
      * @param array $variation
      * @param array $arguments
+     * @param \PHPUnit_Framework_TestResult $result
      * @return array
      */
-    protected function prepareVariation(array $variation, array $arguments)
+    protected function prepareVariation(array $variation, array $arguments, \PHPUnit_Framework_TestResult $result)
     {
-        if (isset($variation['arguments'])) {
-            $arguments = array_merge($variation['arguments'], $arguments);
-        }
-        if (isset($variation['arguments']['variation_name'])) {
-            $this->setVariationName($variation['arguments']['variation_name']);
-        } else {
-            $this->setVariationName($variation['id']);
-        }
-        $resolvedArguments = $this->getObjectManager()
-            ->prepareArguments($this, $this->getName(false), $arguments);
-
-        if (isset($arguments['constraint'])) {
-            $parameters = $this->getObjectManager()->getParameters($this, $this->getName(false));
-            $preparedConstraint = $this->prepareConstraintObject($arguments['constraint']);
-
-            if (isset($parameters['constraint'])) {
-                $resolvedArguments['constraint'] = $preparedConstraint;
-            } else {
-                $variation['constraint'] = $preparedConstraint;
+        try {
+            if (isset($variation['arguments'])) {
+                $arguments = array_merge($variation['arguments'], $arguments);
             }
-        }
+            if (isset($variation['arguments']['variation_name'])) {
+                $this->setVariationName($variation['arguments']['variation_name']);
+            } else {
+                $this->setVariationName($variation['id']);
+            }
+            $resolvedArguments = $this->getObjectManager()
+                ->prepareArguments($this, $this->getName(false), $arguments);
 
-        $variation['arguments'] = $resolvedArguments;
+            if (isset($arguments['constraint'])) {
+                $parameters = $this->getObjectManager()->getParameters($this, $this->getName(false));
+                $preparedConstraint = $this->prepareConstraintObject($arguments['constraint']);
+
+                if (isset($parameters['constraint'])) {
+                    $resolvedArguments['constraint'] = $preparedConstraint;
+                } else {
+                    $variation['constraint'] = $preparedConstraint;
+                }
+            }
+
+            $variation['arguments'] = $resolvedArguments;
+        } catch (\Exception $exception) {
+            $this->eventManager->dispatchEvent(['exception'], [$exception->getMessage()]);
+            $result->addError($this, $exception, \PHP_Timer::stop());
+        }
 
         return $variation;
     }
