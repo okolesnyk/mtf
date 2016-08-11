@@ -714,23 +714,4 @@ abstract class Functional extends \PHPUnit_Framework_TestCase
     {
         $this->isIncomplete = $status;
     }
-
-    /**
-     * Returns a string representation of the test case.
-     *
-     * @return string
-     */
-    public function toString()
-    {
-        $class = new \ReflectionClass($this);
-
-        $buffer = sprintf(
-            '%s::%s',
-
-            $class->name,
-            $this->getName()
-        );
-
-        return $buffer . $this->getDataSetAsString();
-    }
 }
