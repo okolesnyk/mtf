@@ -7,7 +7,6 @@
 namespace Magento\Mtf\TestCase;
 
 use Magento\Mtf\TestRunner\Process\ProcessManager;
-use Magento\Mtf\TestRunner\Process\TestResult;
 
 /**
  * Class Functional

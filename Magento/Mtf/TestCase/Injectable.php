@@ -229,7 +229,7 @@ abstract class Injectable extends Functional
      */
     protected function getDataSetAsString($includeData = true)
     {
-        $buffer = '|rrrrr' . $this->variationName . 'yyyyy|';
+        $buffer = '';
 
         if (isset($this->variationName)) {
             if (!empty($this->variationName)) {
