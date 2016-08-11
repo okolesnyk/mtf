@@ -201,22 +201,27 @@ abstract class Injectable extends Functional
     /**
      * Override to run attached constraint if available.
      *
+     * @param \PHPUnit_Framework_TestResult $result
      * @return mixed
-     * @throws \PHPUnit_Framework_Exception
      */
-    protected function runTest()
+    protected function runTest(\PHPUnit_Framework_TestResult $result)
     {
-        if (isset($this->currentVariation['arguments']['issue'])
-            && !empty($this->currentVariation['arguments']['issue'])
-        ) {
-            $this->markTestIncomplete($this->currentVariation['arguments']['issue']);
-        }
-        $testResult = parent::runTest();
-        $this->localArguments = array_merge($this->localArguments, is_array($testResult) ? $testResult : []);
-        $arguments = array_merge($this->currentVariation['arguments'], $this->localArguments);
-        if ($this->constraint) {
-            $this->constraint->configure($arguments);
-            self::assertThat($this->getName(), $this->constraint);
+        try {
+            if (isset($this->currentVariation['arguments']['issue'])
+                && !empty($this->currentVariation['arguments']['issue'])
+            ) {
+                $this->markTestIncomplete($this->currentVariation['arguments']['issue']);
+            }
+            $testResult = parent::runTest();
+            $this->localArguments = array_merge($this->localArguments, is_array($testResult) ? $testResult : []);
+            $arguments = array_merge($this->currentVariation['arguments'], $this->localArguments);
+            if ($this->constraint) {
+                $this->constraint->configure($arguments);
+                self::assertThat($this->getName(), $this->constraint);
+            }
+        } catch (\Exception $exception) {
+            $this->eventManager->dispatchEvent(['exception'], [$exception->getMessage()]);
+            $result->addError($this, $exception, \PHP_Timer::stop());
         }
 
         return $testResult;
