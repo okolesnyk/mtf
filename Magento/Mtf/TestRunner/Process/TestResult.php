@@ -165,4 +165,31 @@ class TestResult extends \PHPUnit_Framework_TestResult
     {
         return ['time', 'notImplemented', 'risky', 'skipped', 'errors', 'failures', 'codeCoverage'];
     }
+
+    /**
+     * Informs the result that a test was completed.
+     *
+     * @param \PHPUnit_Framework_Test $test
+     * @param float                  $time
+     */
+    public function endTest(\PHPUnit_Framework_Test $test, $time)
+    {
+        foreach ($this->listeners as $listener) {
+            $listener->endTest($test, $time);
+        }
+
+        if (!$this->lastTestFailed && $test instanceof \PHPUnit_Framework_TestCase) {
+            $class  = get_class($test);
+            $key    =  $class . '::' . $test->getName() . 'ttttttttttttttt';
+
+            $this->passed[$key] = array(
+                'result' => $test->getResult(),
+                'size'   => PHPUnit_Util_Test::getSize(
+                    $class, $test->getName(false)
+                )
+            );
+
+            $this->time += $time;
+        }
+    }
 }
