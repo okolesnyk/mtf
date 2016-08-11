@@ -175,6 +175,16 @@ class TestSuite extends \PHPUnit_Framework_TestSuite
     }
 
     /**
+     * Creates a default TestResult object.
+     *
+     * @return \Magento\Mtf\TestRunner\Process\TestResult
+     */
+    protected function createResult()
+    {
+        return new \Magento\Mtf\TestRunner\Process\TestResult;
+    }
+
+    /**
      * Wait for parallel processes to complete (for parallel run)
      * @return void
      */
