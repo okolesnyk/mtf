@@ -22,14 +22,4 @@ class Injectable extends \Magento\Mtf\TestSuite\TestSuite
             parent::waitForProcessesToComplete();
         }
     }
-
-    /**
-     * Returns a string representation of the test suite.
-     *
-     * @return string
-     */
-    public function toString()
-    {
-        return $this->getName() . ' variation: ';
-    }
 }
