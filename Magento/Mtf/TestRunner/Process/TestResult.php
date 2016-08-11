@@ -178,13 +178,16 @@ class TestResult extends \PHPUnit_Framework_TestResult
             $listener->endTest($test, $time);
         }
 
-        if (!$this->lastTestFailed && $test instanceof \PHPUnit_Framework_TestCase) {
+        if (!$this->lastTestFailed && ($test instanceof \PHPUnit_Framework_TestCase || $test instanceof Injectable)) {
             $class  = get_class($test);
-            $key    =  $class . '::' . $test->getName() . 'ttttttttttttttt';
-
+            if ($test instanceof \PHPUnit_Framework_TestCase) {
+                $key    =  $class . '::' . $test->getName();
+            } else if ($test instanceof Injectable) {
+                $key    =  $class . '::' . $test->getName() . ' variation ' . $test->getVariationName();
+            }
             $this->passed[$key] = array(
                 'result' => $test->getResult(),
-                'size'   => PHPUnit_Util_Test::getSize(
+                'size'   => \PHPUnit_Util_Test::getSize(
                     $class, $test->getName(false)
                 )
             );
