@@ -229,6 +229,9 @@ abstract class Injectable extends Functional
      */
     protected function getDataSetAsString($includeData = true)
     {
+        print  '|||||||';
+        debug_print_backtrace();
+        print '|||||||';
         $buffer = '';
 
         if (isset($this->variationName)) {
