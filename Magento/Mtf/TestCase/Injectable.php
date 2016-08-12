@@ -245,8 +245,9 @@ abstract class Injectable extends Functional
         } else {
             $buffer = parent::getDataSetAsString($includeData);
         }
+        var_dump($this);
 
-        return $buffer .  'tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt';
+        return $buffer;
     }
 
     /**
@@ -301,15 +302,4 @@ abstract class Injectable extends Functional
             ['codeConstraints' => array_keys($constraintsArray)]
         );
     }
-
-//    public function toString() {
-//        var_dump($this);
-//    }
-
-    public function __toString() {
-        return 'data=' . empty($this->data) . '|||| dataName=' . $this->dataName . '||||variationName=' . $this->variationName
-            . '||||currentVariation=' . print_r($this->currentVariation, true)
-            . 'name=' . $this->name;
-    }
-
 }
