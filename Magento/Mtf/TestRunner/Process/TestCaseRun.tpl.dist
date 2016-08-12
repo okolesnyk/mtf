@@ -77,7 +77,7 @@ function __phpunit_run_isolated_test()
 
     ob_end_clean();
     ob_start();
-    $result = $test->run($result);
+    $test->run($result);
     $output = ob_get_clean();
 
     print serialize(
@@ -86,7 +86,7 @@ function __phpunit_run_isolated_test()
         'numAssertions' => $test->getNumAssertions(),
         'result'        => $result,
         'runVariations' => $result->count(),
-        'output'        => $output . "asdsadasdasd"
+        'output'        => $output
       )
     );
 

@@ -31,6 +31,7 @@ class TestResult extends \PHPUnit_Framework_TestResult
      */
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
+        print 'addError';
         $e = $this->wrapException($e);
         $variation = 0;
         if ($test instanceof Injectable) {
@@ -88,6 +89,7 @@ class TestResult extends \PHPUnit_Framework_TestResult
      */
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
     {
+        print 'addFailure';
         $e = $this->wrapException($e);
         $variation = null;
         if ($test instanceof Injectable) {
@@ -163,6 +165,7 @@ class TestResult extends \PHPUnit_Framework_TestResult
      */
     public function __sleep()
     {
+        print '__sleep';
         return ['time', 'notImplemented', 'risky', 'skipped', 'errors', 'failures', 'codeCoverage'];
     }
 }
