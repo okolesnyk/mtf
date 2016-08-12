@@ -62,7 +62,7 @@ class TestResult extends \PHPUnit_Framework_TestResult
             }
         } else {
             print $variation . 'ttttttttttttttttttttt';
-            $this->errors[$variation] = new \PHPUnit_Framework_TestFailure($test, $e);
+            $this->errors[$variation] = new TestFailure($test, $e);
             $notifyMethod = 'addError';
 
             if ($this->stopOnError || $this->stopOnFailure) {
