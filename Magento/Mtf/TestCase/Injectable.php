@@ -304,8 +304,7 @@ abstract class Injectable extends Functional
 
     public function toString() {
         return 'data=' . empty($this->data) . '|||| dataName=' . $this->dataName . '||||variationName=' . $this->variationName
-            . '||||currentVariation=' . print_r($this->currentVariation, true)
-            . '||||testResult' . $this->getResult();
+            . '||||currentVariation=' . print_r($this->currentVariation, true);
     }
 
     /**
@@ -315,6 +314,6 @@ abstract class Injectable extends Functional
      */
     public function __sleep()
     {
-        return ['data', 'dataName', 'variationName', 'testResult'];
+        return ['data', 'dataName', 'variationName'];
     }
 }
