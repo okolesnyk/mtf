@@ -31,7 +31,6 @@ class TestResult extends \PHPUnit_Framework_TestResult
      */
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
-        print 'addError';
         $e = $this->wrapException($e);
         $variation = 0;
         if ($test instanceof Injectable) {
@@ -63,14 +62,13 @@ class TestResult extends \PHPUnit_Framework_TestResult
             }
         } else {
             print 'addError2222222222';
-            $this->errors[$variation] = new \PHPUnit_Framework_TestFailure($test, $e);
+            $this->errors[$variation] = new \PHPUnit_Framework_TestFailure($test, new \Exception($e->getMessage() . ': new messagerrrrr', $e->getCode(), $e));
             $notifyMethod = 'addError';
 
             if ($this->stopOnError || $this->stopOnFailure) {
                 $this->stop();
             }
         }
-        print 'addError33333333';
 
         foreach ($this->listeners as $listener) {
             $listener->$notifyMethod($test, $e, $time);

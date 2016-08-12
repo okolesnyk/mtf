@@ -301,4 +301,8 @@ abstract class Injectable extends Functional
             ['codeConstraints' => array_keys($constraintsArray)]
         );
     }
+
+    public function toString() {
+        return 'eeeeeeeeeeeeeeerrrrrrrrrrrrrrroooooooooooorrrrrrrrrrrrrrrrr';
+    }
 }
