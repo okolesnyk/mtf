@@ -229,9 +229,6 @@ abstract class Injectable extends Functional
      */
     protected function getDataSetAsString($includeData = true)
     {
-        print  '|||||||';
-        debug_print_backtrace();
-        print '|||||||';
         $buffer = '';
 
         if (isset($this->variationName)) {
@@ -248,7 +245,6 @@ abstract class Injectable extends Functional
         } else {
             $buffer = parent::getDataSetAsString($includeData);
         }
-        var_dump($this);
 
         return $buffer;
     }
@@ -304,5 +300,13 @@ abstract class Injectable extends Functional
             'Magento\Mtf\Constraint\Composite',
             ['codeConstraints' => array_keys($constraintsArray)]
         );
+    }
+
+    public function toString()
+    {
+        print  '|||||||';
+        debug_print_backtrace();
+        print '|||||||';
+        var_dump($this);
     }
 }
