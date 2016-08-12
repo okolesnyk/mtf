@@ -56,11 +56,9 @@ class PHPUnitUtils extends \PHPUnit_Util_PHP
 
         if (!empty($stderr)) {
             $result->addError($test, new \PHPUnit_Framework_Exception(trim($stderr)), $time);
-            echo 'addError';
         } else {
             set_error_handler(
                 function ($errno, $errstr, $errfile, $errline) {
-                    echo 'set_error_handler';
                     throw new \ErrorException($errstr, $errno, $errno, $errfile, $errline);
                 }
             );
@@ -68,14 +66,12 @@ class PHPUnitUtils extends \PHPUnit_Util_PHP
                 if (strpos($stdout, "#!/usr/bin/env php\n") === 0) {
                     $stdout = substr($stdout, 19);
                 }
-                echo 'try stdout';
                 $childResult = unserialize(str_replace("#!/usr/bin/env php\n", '', $stdout));
                 $runVariations = $childResult['runVariations'];
                 restore_error_handler();
             } catch (\ErrorException $e) {
                 restore_error_handler();
                 $childResult = false;
-                echo 'ErrorException';
                 $result->addError($test, new \PHPUnit_Framework_Exception(trim($stdout), 0, $e), $time);
             }
 
@@ -147,7 +143,6 @@ class PHPUnitUtils extends \PHPUnit_Util_PHP
             }
         }
 
-        echo 'endTest(test time)';
         $result->endTest($test, $time);
     }
 
