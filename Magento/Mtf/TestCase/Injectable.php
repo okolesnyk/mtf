@@ -306,14 +306,4 @@ abstract class Injectable extends Functional
         return 'data=' . empty($this->data) . '|||| dataName=' . $this->dataName . '||||variationName=' . $this->variationName
             . '||||currentVariation=' . print_r($this->currentVariation, true);
     }
-
-    /**
-     * Serialize only required information
-     *
-     * @return array
-     */
-    public function __sleep()
-    {
-        return ['data', 'dataName', 'variationName'];
-    }
 }
