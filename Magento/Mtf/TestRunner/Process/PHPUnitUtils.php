@@ -75,11 +75,6 @@ class PHPUnitUtils extends \PHPUnit_Util_PHP
                 $childResult = false;
 
                 $result->addError($test, new \PHPUnit_Framework_Exception(trim($stdout), 0, $e), $time);
-            } catch (\Exception $e) {
-                restore_error_handler();
-                $childResult = false;
-
-                $result->addError($test, new \PHPUnit_Framework_Exception(trim($stdout), 0, $e), $time);
             }
 
             if ($childResult !== false) {

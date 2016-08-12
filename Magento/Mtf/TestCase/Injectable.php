@@ -129,7 +129,7 @@ abstract class Injectable extends Functional
         try {
             \PHP_Timer::start();
             if (!isset(static::$sharedArguments[$this->dataId]) && method_exists($this, '__prepare')) {
-                static::$sharedArguments[$this->dataId] = (array)$this->getObjectManager()->invoke($this, '__prepare');
+                static::$sharedArguments[$this->dataId] = (array) $this->getObjectManager()->invoke($this, '__prepare');
             }
             /** @var $testVariationIterator \Magento\Mtf\Util\Iterator\TestCaseVariation */
             $testVariationIterator = $this->getObjectManager()->create(
@@ -153,8 +153,7 @@ abstract class Injectable extends Functional
                 $this->currentVariation = $testVariationIterator->current();
                 $variation = $this->prepareVariation(
                     $this->currentVariation,
-                    $this->localArguments,
-                    $result
+                    $this->localArguments
                 );
                 $this->executeTestVariation($result, $variation);
                 $testVariationIterator->next();
@@ -201,27 +200,22 @@ abstract class Injectable extends Functional
     /**
      * Override to run attached constraint if available.
      *
-     * @param \PHPUnit_Framework_TestResult $result
      * @return mixed
+     * @throws \PHPUnit_Framework_Exception
      */
-    protected function runTest(\PHPUnit_Framework_TestResult $result)
+    protected function runTest()
     {
-        try {
-            if (isset($this->currentVariation['arguments']['issue'])
-                && !empty($this->currentVariation['arguments']['issue'])
-            ) {
-                $this->markTestIncomplete($this->currentVariation['arguments']['issue']);
-            }
-            $testResult = parent::runTest();
-            $this->localArguments = array_merge($this->localArguments, is_array($testResult) ? $testResult : []);
-            $arguments = array_merge($this->currentVariation['arguments'], $this->localArguments);
-            if ($this->constraint) {
-                $this->constraint->configure($arguments);
-                self::assertThat($this->getName(), $this->constraint);
-            }
-        } catch (\Exception $exception) {
-            $this->eventManager->dispatchEvent(['exception'], [$exception->getMessage()]);
-            $result->addError($this, $exception, \PHP_Timer::stop());
+        if (isset($this->currentVariation['arguments']['issue'])
+            && !empty($this->currentVariation['arguments']['issue'])
+        ) {
+            $this->markTestIncomplete($this->currentVariation['arguments']['issue']);
+        }
+        $testResult = parent::runTest();
+        $this->localArguments = array_merge($this->localArguments, is_array($testResult) ? $testResult : []);
+        $arguments = array_merge($this->currentVariation['arguments'], $this->localArguments);
+        if ($this->constraint) {
+            $this->constraint->configure($arguments);
+            self::assertThat($this->getName(), $this->constraint);
         }
 
         return $testResult;
@@ -260,39 +254,35 @@ abstract class Injectable extends Functional
      *
      * @param array $variation
      * @param array $arguments
-     * @param \PHPUnit_Framework_TestResult $result
      * @return array
      */
-    protected function prepareVariation(array $variation, array $arguments, \PHPUnit_Framework_TestResult $result)
+    protected function prepareVariation(array $variation, array $arguments)
     {
-        try {
-            if (isset($variation['arguments'])) {
-                $arguments = array_merge($variation['arguments'], $arguments);
-            }
-            if (isset($variation['arguments']['variation_name'])) {
-                $this->setVariationName($variation['arguments']['variation_name']);
-            } else {
-                $this->setVariationName($variation['id']);
-            }
-            $resolvedArguments = $this->getObjectManager()
-                ->prepareArguments($this, $this->getName(false), $arguments);
-
-            if (isset($arguments['constraint'])) {
-                $parameters = $this->getObjectManager()->getParameters($this, $this->getName(false));
-                $preparedConstraint = $this->prepareConstraintObject($arguments['constraint']);
-
-                if (isset($parameters['constraint'])) {
-                    $resolvedArguments['constraint'] = $preparedConstraint;
-                } else {
-                    $variation['constraint'] = $preparedConstraint;
-                }
-            }
-
-            $variation['arguments'] = $resolvedArguments;
-        } catch (\Exception $exception) {
-            $this->eventManager->dispatchEvent(['exception'], [$exception->getMessage()]);
-            $result->addError($this, $exception, \PHP_Timer::stop());
+        if (isset($variation['arguments'])) {
+            $arguments = array_merge($variation['arguments'], $arguments);
         }
+        if (isset($variation['arguments']['variation_name'])) {
+            $this->setVariationName($variation['arguments']['variation_name']);
+        } else {
+            $this->setVariationName($variation['id']);
+        }
+        $this->dataId .= '::' . $this->getVariationName();
+
+        $resolvedArguments = $this->getObjectManager()
+            ->prepareArguments($this, $this->getName(false), $arguments);
+
+        if (isset($arguments['constraint'])) {
+            $parameters = $this->getObjectManager()->getParameters($this, $this->getName(false));
+            $preparedConstraint = $this->prepareConstraintObject($arguments['constraint']);
+
+            if (isset($parameters['constraint'])) {
+                $resolvedArguments['constraint'] = $preparedConstraint;
+            } else {
+                $variation['constraint'] = $preparedConstraint;
+            }
+        }
+
+        $variation['arguments'] = $resolvedArguments;
 
         return $variation;
     }

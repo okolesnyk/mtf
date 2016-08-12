@@ -80,8 +80,6 @@ function __phpunit_run_isolated_test()
     $test->run($result);
     $output = ob_get_clean();
 
-    echo $test->getVariationName() . '||||||||||||||yyyyyyyyy';
-
     print serialize(
       array(
         'testResult'    => $test->getResult(),
