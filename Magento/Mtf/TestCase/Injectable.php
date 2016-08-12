@@ -309,4 +309,11 @@ abstract class Injectable extends Functional
         print '|||||||';
         var_dump($this);
     }
+
+//    public function __debugInfo() {
+//        return [
+//            'name' => $this->name,
+//            'varName' => $this->variationName
+//        ];
+//    }
 }
