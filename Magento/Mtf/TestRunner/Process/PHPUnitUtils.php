@@ -68,7 +68,7 @@ class PHPUnitUtils extends \PHPUnit_Util_PHP
                 if (strpos($stdout, "#!/usr/bin/env php\n") === 0) {
                     $stdout = substr($stdout, 19);
                 }
-
+                echo 'try stdout';
                 $childResult = unserialize(str_replace("#!/usr/bin/env php\n", '', $stdout));
                 $runVariations = $childResult['runVariations'];
                 restore_error_handler();
@@ -147,6 +147,7 @@ class PHPUnitUtils extends \PHPUnit_Util_PHP
             }
         }
 
+        echo 'endTest(test time)';
         $result->endTest($test, $time);
     }
 
