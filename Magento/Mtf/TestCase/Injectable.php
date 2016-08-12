@@ -201,7 +201,7 @@ abstract class Injectable extends Functional
      * Override to run attached constraint if available.
      *
      * @return mixed
-     * @throws \PHPUnit_Framework_Exception
+     * @throws \Exception
      */
     protected function runTest()
     {
@@ -210,11 +210,7 @@ abstract class Injectable extends Functional
         ) {
             $this->markTestIncomplete($this->currentVariation['arguments']['issue']);
         }
-        try {
-            $testResult = parent::runTest();
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage() . 'asdasfsafasf', $e->getCode(), $e);
-        }
+        $testResult = parent::runTest();
         $this->localArguments = array_merge($this->localArguments, is_array($testResult) ? $testResult : []);
         $arguments = array_merge($this->currentVariation['arguments'], $this->localArguments);
         if ($this->constraint) {
