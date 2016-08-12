@@ -210,7 +210,11 @@ abstract class Injectable extends Functional
         ) {
             $this->markTestIncomplete($this->currentVariation['arguments']['issue']);
         }
-        $testResult = parent::runTest();
+        try {
+            $testResult = parent::runTest();
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage() . 'asdasfsafasf', $e->getCode(), $e);
+        }
         $this->localArguments = array_merge($this->localArguments, is_array($testResult) ? $testResult : []);
         $arguments = array_merge($this->currentVariation['arguments'], $this->localArguments);
         if ($this->constraint) {
@@ -266,8 +270,6 @@ abstract class Injectable extends Functional
         } else {
             $this->setVariationName($variation['id']);
         }
-        $this->dataId .= '::' . $this->getVariationName();
-
         $resolvedArguments = $this->getObjectManager()
             ->prepareArguments($this, $this->getName(false), $arguments);
 
