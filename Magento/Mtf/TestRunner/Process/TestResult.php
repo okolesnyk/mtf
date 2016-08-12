@@ -62,6 +62,7 @@ class TestResult extends \PHPUnit_Framework_TestResult
                 $this->stop();
             }
         } else {
+            print 'addError2222222222';
             $this->errors[$variation] = new \PHPUnit_Framework_TestFailure($test, $e);
             $notifyMethod = 'addError';
 
@@ -69,6 +70,7 @@ class TestResult extends \PHPUnit_Framework_TestResult
                 $this->stop();
             }
         }
+        print 'addError33333333';
 
         foreach ($this->listeners as $listener) {
             $listener->$notifyMethod($test, $e, $time);
@@ -89,7 +91,6 @@ class TestResult extends \PHPUnit_Framework_TestResult
      */
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
     {
-        print 'addFailure';
         $e = $this->wrapException($e);
         $variation = null;
         if ($test instanceof Injectable) {
@@ -165,7 +166,6 @@ class TestResult extends \PHPUnit_Framework_TestResult
      */
     public function __sleep()
     {
-        print '__sleep';
         return ['time', 'notImplemented', 'risky', 'skipped', 'errors', 'failures', 'codeCoverage'];
     }
 }
