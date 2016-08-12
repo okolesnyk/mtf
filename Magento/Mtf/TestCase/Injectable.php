@@ -307,4 +307,14 @@ abstract class Injectable extends Functional
             . '||||currentVariation=' . print_r($this->currentVariation, true)
             . '||||testResult' . $this->getResult();
     }
+
+    /**
+     * Serialize only required information
+     *
+     * @return array
+     */
+    public function __sleep()
+    {
+        return ['data', 'dataName', 'variationName', 'testResult'];
+    }
 }
