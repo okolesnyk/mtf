@@ -303,6 +303,6 @@ abstract class Injectable extends Functional
     }
 
     public function toString() {
-        return 'data=' . empty($this->data) . '|||| dataName=' . $this->dataName;
+        return 'data=' . empty($this->data) . '|||| dataName=' . $this->dataName . '||||variationName=' . $this->variationName;
     }
 }
